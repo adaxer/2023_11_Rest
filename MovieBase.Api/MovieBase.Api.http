@@ -1,6 +1,16 @@
 @MovieBase.Api_HostAddress = http://localhost:5008
 
-GET {{MovieBase.Api_HostAddress}}/weatherforecast/
+GET {{MovieBase.Api_HostAddress}}/movies/list/10/5
+Accept: application/json
+
+###
+
+GET {{MovieBase.Api_HostAddress}}/movies/list
+Accept: application/xml
+
+###
+
+GET {{MovieBase.Api_HostAddress}}/movies/iii
 Accept: application/json
 
 ###
