@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieBase.Common;
@@ -22,7 +23,7 @@ public class MoviesController : ControllerBase
     [Produces(MediaTypeNames.Application.Json, MediaTypeNames.Application.Xml)]
     public async Task<IActionResult> List(int pageSize, int pageNo)
     {
-        var data = await _context.Movies.Skip(pageNo*pageSize).Take(pageSize).ToArrayAsync();
+        var data = await _context.Movies.Skip(pageNo * pageSize).Take(pageSize).ToArrayAsync();
         return Ok(data);
     }
 
@@ -31,7 +32,7 @@ public class MoviesController : ControllerBase
     public async Task<IActionResult> One(int id)
     {
         var data = await _context.Movies.FindAsync(id);
-        return data==null
+        return data == null
             ? NotFound()
             : Ok(data);
     }
@@ -47,6 +48,25 @@ public class MoviesController : ControllerBase
     //    return BadRequest("An int is expected");
     //}
 
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> Patch(int id, [FromBody] JsonPatchDocument<Movie> patchDoc)
+    {
+        try
+        {
+            var movie = await _context.Movies.FindAsync(id);
+            patchDoc.ApplyTo(movie!, ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            await _context.SaveChangesAsync();
+            return new ObjectResult(movie);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex);
+        }
+    }
 }
 
 public class Result<T>

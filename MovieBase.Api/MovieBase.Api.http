@@ -14,3 +14,18 @@ GET {{MovieBase.Api_HostAddress}}/movies/iii
 Accept: application/json
 
 ###
+
+PATCH {{MovieBase.Api_HostAddress}}/movies/1
+Accept: */*
+Content-Type: application/json-patch+json
+
+[
+  {
+    "op": "add",
+    "path": "/director",
+    "value": "Ridley Scott"
+  }
+]
+
+###
+
