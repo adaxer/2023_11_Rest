@@ -9,12 +9,12 @@ public partial class MainViewModel : ObservableObject
     public MainViewModel(IMovieService movieService)
     {
         LoadMovies();
-        this.movieService = movieService;
+        _movieService = movieService;
     }
 
     private async void LoadMovies()
     {
-        Movies = new ObservableCollection<Movie>(await movieService.GetPageAsync(20, 0));
+        Movies = new ObservableCollection<Movie>(await _movieService.GetPageAsync(20, 0));
         Title = $"Loaded {Movies.Count} Movies";
     }
 
@@ -23,5 +23,5 @@ public partial class MainViewModel : ObservableObject
 
     [ObservableProperty]
     private ICollection<Movie>? _movies;
-    private readonly IMovieService movieService;
+    private readonly IMovieService _movieService;
 }

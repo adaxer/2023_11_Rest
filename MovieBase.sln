@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieBase.Common", "MovieBa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieBase.Data", "MovieBase.Data\MovieBase.Data.csproj", "{84B06227-328E-41FD-9BB0-D4F9E7574AF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieBase.XPlatform", "MovieBase.XPlatform\MovieBase.XPlatform.csproj", "{1628EF8F-2957-4763-9C51-CCECA3AAAE4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieBase.XPlatform", "MovieBase.XPlatform\MovieBase.XPlatform.csproj", "{1628EF8F-2957-4763-9C51-CCECA3AAAE4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieBase.ClientLib", "MovieBase.ClientLib\MovieBase.ClientLib.csproj", "{E6F0786C-D3CC-4A73-8F59-EF0D3753AEB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieBase.ClientLib", "MovieBase.ClientLib\MovieBase.ClientLib.csproj", "{E6F0786C-D3CC-4A73-8F59-EF0D3753AEB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieBase.ConsoleClient", "MovieBase.ConsoleClient\MovieBase.ConsoleClient.csproj", "{6D311E44-12C0-4CDE-9CB8-B99783263437}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieBase.ConsoleClient", "MovieBase.ConsoleClient\MovieBase.ConsoleClient.csproj", "{6D311E44-12C0-4CDE-9CB8-B99783263437}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
