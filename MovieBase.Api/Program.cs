@@ -12,7 +12,9 @@ public class Program
 
         // Add services to the container.
 
-        builder.Services.AddControllers().AddXmlSerializerFormatters();
+        builder.Services.AddControllers()
+            .AddNewtonsoftJson()
+            .AddXmlSerializerFormatters();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();

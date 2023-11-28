@@ -18,7 +18,7 @@ public class MovieContext : DbContext
         {
             var movies = new List<Movie>
             {
-                new Movie { Id = 1, Title = "Blade Runner", Director = "Ridley Scott", Released = new DateOnly(1982, 6, 25) },
+                new Movie { Id = 1, Title = "Blade Runner", Director = "James Cameron", Released = new DateOnly(1982, 6, 25) },
                 new Movie { Id = 2, Title = "Star Wars: Episode IV - A New Hope", Director = "George Lucas", Released = new DateOnly(1977, 5, 25) },
                 new Movie { Id = 3, Title = "The Matrix", Director = "Lana Wachowski, Lilly Wachowski", Released = new DateOnly(1999, 3, 31) },
                 new Movie { Id = 4, Title = "Inception", Director = "Christopher Nolan", Released = new DateOnly(2010, 7, 16) },

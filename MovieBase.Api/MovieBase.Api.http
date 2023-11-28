@@ -51,3 +51,18 @@ Content-Type: application/json
   "released": "1966-11-28"
 }
 ###
+
+PATCH {{MovieBase.Api_HostAddress}}/movies/1
+Accept: */*
+Content-Type: application/json-patch+json
+
+[
+  {
+    "op": "add",
+    "path": "/director",
+    "value": "Ridley Scott"
+  }
+]
+
+###
+
