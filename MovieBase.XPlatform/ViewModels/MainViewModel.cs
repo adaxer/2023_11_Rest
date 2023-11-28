@@ -1,15 +1,17 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using MovieBase.Common;
 using MovieBase.Common.Interfaces;
 using System.Collections.ObjectModel;
 
 namespace MovieBase.XPlatform.ViewModels;
-public partial class MainViewModel : ObservableObject
+public partial class MainViewModel : BaseViewModel
 {
-    public MainViewModel(IMovieService movieService)
+    public MainViewModel(IMovieService movieService, INavigationService navigation)
     {
-        LoadMovies();
         _movieService = movieService;
+        _navigation = navigation;
+        LoadMovies();
     }
 
     private async void LoadMovies()
@@ -18,10 +20,15 @@ public partial class MainViewModel : ObservableObject
         Title = $"Loaded {Movies.Count} Movies";
     }
 
-    [ObservableProperty]
-    private string _title  = "Hello Maui";
+    [RelayCommand]
+    private async Task Navigate()
+    {
+        await _navigation.NavigateAsync("Details", new Dictionary<string, object> { { "Title", "Called from Main" } });
+    }
 
     [ObservableProperty]
     private ICollection<Movie>? _movies;
+
     private readonly IMovieService _movieService;
+    private readonly INavigationService _navigation;
 }

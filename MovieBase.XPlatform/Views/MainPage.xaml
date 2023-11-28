@@ -17,6 +17,8 @@
                 Text="{Binding Title}"
                 Style="{StaticResource Headline}"
                 SemanticProperties.HeadingLevel="Level1" />
+
+            <Button Text="Navigiere" Command="{Binding NavigateCommand}"></Button>
         </VerticalStackLayout>
     </ScrollView>
 
