@@ -48,25 +48,6 @@ public class MoviesController : ControllerBase
     //    return BadRequest("An int is expected");
     //}
 
-    [HttpPatch("{id}")]
-    public async Task<IActionResult> Patch(int id, [FromBody] JsonPatchDocument<Movie> patchDoc)
-    {
-        try
-        {
-            var movie = await _context.Movies.FindAsync(id);
-            patchDoc.ApplyTo(movie!, ModelState);
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            await _context.SaveChangesAsync();
-            return new ObjectResult(movie);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex);
-        }
-    }
     [HttpPost(Name = "NewMovie")]
     public async Task<IActionResult> Add([FromBody] Movie newMovie)
     {
@@ -109,6 +90,25 @@ public class MoviesController : ControllerBase
         return NotFound();
     }
 
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> Patch(int id, [FromBody] JsonPatchDocument<Movie> patchDoc)
+    {
+        try
+        {
+            var movie = await _context.Movies.FindAsync(id);
+            patchDoc.ApplyTo(movie!, ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            await _context.SaveChangesAsync();
+            return new ObjectResult(movie);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex);
+        }
+    }
 }
 
 public class Result<T>

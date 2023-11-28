@@ -10,7 +10,7 @@ Accept: application/xml
 
 ###
 
-GET {{MovieBase.Api_HostAddress}}/movies/iii
+GET {{MovieBase.Api_HostAddress}}/movies/1
 Accept: application/json
 
 ###
