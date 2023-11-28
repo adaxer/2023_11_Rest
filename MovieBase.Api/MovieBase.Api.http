@@ -14,3 +14,40 @@ GET {{MovieBase.Api_HostAddress}}/movies/iii
 Accept: application/json
 
 ###
+
+
+POST {{MovieBase.Api_HostAddress}}/movies
+Content-Type: application/json
+
+{
+    "id": 5,
+  "title": "Some movie",
+  "director": "Nobody",
+  "released": "1966-11-28"
+}
+###
+
+POST {{MovieBase.Api_HostAddress}}/movies
+Content-Type: application/json
+
+{
+  "director": "Nobody",
+  "released": "1966-11-28"
+}
+###
+
+DELETE {{MovieBase.Api_HostAddress}}/movies/52
+Accept: application/json
+
+###
+
+PUT {{MovieBase.Api_HostAddress}}/movies
+Content-Type: application/json
+
+{
+  "id": 53,
+  "title": "Updated Name",
+  "director": "Nobody",
+  "released": "1966-11-28"
+}
+###

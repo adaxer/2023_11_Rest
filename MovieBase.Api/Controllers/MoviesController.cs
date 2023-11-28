@@ -22,7 +22,7 @@ public class MoviesController : ControllerBase
     [Produces(MediaTypeNames.Application.Json, MediaTypeNames.Application.Xml)]
     public async Task<IActionResult> List(int pageSize, int pageNo)
     {
-        var data = await _context.Movies.Skip(pageNo*pageSize).Take(pageSize).ToArrayAsync();
+        var data = await _context.Movies.Skip(pageNo * pageSize).Take(pageSize).ToArrayAsync();
         return Ok(data);
     }
 
@@ -31,7 +31,7 @@ public class MoviesController : ControllerBase
     public async Task<IActionResult> One(int id)
     {
         var data = await _context.Movies.FindAsync(id);
-        return data==null
+        return data == null
             ? NotFound()
             : Ok(data);
     }
@@ -46,6 +46,48 @@ public class MoviesController : ControllerBase
     //    }
     //    return BadRequest("An int is expected");
     //}
+
+    [HttpPost(Name = "NewMovie")]
+    public async Task<IActionResult> Add([FromBody] Movie newMovie)
+    {
+        try
+        {
+            await _context.Movies.AddAsync(newMovie);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(One), new { id = newMovie.Id }, newMovie);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Add failed");
+            return BadRequest();
+        }
+    }
+
+    [HttpDelete("{id}", Name ="Delete Movie")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        if(await _context.Movies.FindAsync(id) is Movie theOne)
+        { 
+            _context.Movies.Remove(theOne);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        return NotFound();
+    }
+
+    [HttpPut(Name ="Update Movie")]
+    public async Task<IActionResult> Update([FromBody] Movie movie)
+    {
+        if (await _context.Movies.FindAsync(movie.Id) is Movie theOne)
+        {
+            _context.Entry(theOne).CurrentValues.SetValues(movie);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        return NotFound();
+    }
 
 }
 
