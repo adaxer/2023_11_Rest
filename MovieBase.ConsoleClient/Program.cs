@@ -8,6 +8,7 @@ internal class Program
 {
     static async Task Main(string[] args)
     {
+        Console.ReadLine();
         var service = new MovieService();
         var movies = await service.GetPageAsync(20, 0);
         Console.WriteLine(movies.ToList().FirstOrDefault()?.Title);

@@ -11,7 +11,7 @@ public partial class MainViewModel : BaseViewModel
     {
         _movieService = movieService;
         _navigation = navigation;
-        LoadMovies();
+        // LoadMovies();
     }
 
     private async void LoadMovies()
