@@ -6,6 +6,15 @@ namespace MovieBase.Data;
 public class MovieContext : DbContext
 {
     public DbSet<Movie> Movies { get; set; }
+    public DbSet<Award> Awards { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        // Configuring many-to-many relationship
+        modelBuilder.Entity<Movie>()
+            .HasMany(m => m.Awards)
+            .WithMany(a => a.Movies);
+    }
 
     public MovieContext(DbContextOptions<MovieContext> options) : base(options)
     {
@@ -14,6 +23,7 @@ public class MovieContext : DbContext
 
     void Seed()
     {
+        Database.EnsureCreated();
         if (!Movies.Any()) // Überprüft, ob bereits Filme vorhanden sind
         {
             var movies = new List<Movie>

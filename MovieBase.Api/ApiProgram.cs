@@ -25,7 +25,11 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        builder.Services.AddDbContext<MovieContext>(o=>o.UseInMemoryDatabase("app.db"));
+        var connstring = builder.Configuration.GetConnectionString("Movies");
+        builder.Services.AddDbContext<MovieContext>(o => o
+            .UseSqlite("Data Source=./movies.db")
+            .EnableSensitiveDataLogging()
+            .LogTo(Console.WriteLine));
         builder.Services.AddDbContext<UsersContext>(o=>o.UseInMemoryDatabase("users.db"));
 
         builder.Services.AddIdentityApiEndpoints<IdentityUser>().AddEntityFrameworkStores<UsersContext>();
