@@ -16,7 +16,7 @@ public partial class MainViewModel : BaseViewModel
 
     private async void LoadMovies()
     {
-        Movies = new ObservableCollection<Movie>(await _movieService.GetPageAsync(20, 0));
+        Movies = new ObservableCollection<Movie>(await _movieService.GetMoviePage(20, 0));
         Title = $"Loaded {Movies.Count} Movies";
     }
 

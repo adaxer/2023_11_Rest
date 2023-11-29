@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MovieBase.ClientLib\MovieBase.ClientLib.csproj" />
     <ProjectReference Include="..\MovieBase.Common\MovieBase.Common.csproj" />
   </ItemGroup>
