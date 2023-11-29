@@ -3,9 +3,9 @@ using MovieBase.Common.Interfaces;
 
 namespace MovieBase.XPlatform.Views;
 
-public partial class DetailsPage
+public partial class ListPage
 {
-    public DetailsPage(DetailsViewModel detailsViewModel)
+    public ListPage(ListViewModel detailsViewModel)
     {
         InitializeComponent();
         BindingContext = detailsViewModel;

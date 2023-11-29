@@ -1,6 +1,9 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using MovieBase.Common;
 using MovieBase.Data;
@@ -9,16 +12,19 @@ using System.Net.Mime;
 namespace MovieBase.Api.Controllers;
 [ApiController]
 [Route("[controller]")]
+[EnableCors("CorsPolicy")]
 [Authorize]
 public class MoviesController : ControllerBase
 {
     private readonly ILogger<MoviesController> _logger;
     private readonly MovieContext _context;
+    private readonly IMapper _mapper;
 
-    public MoviesController(ILogger<MoviesController> logger, MovieContext context)
+    public MoviesController(ILogger<MoviesController> logger, MovieContext context, IMapper mapper)
     {
         _logger = logger;
         _context = context;
+        _mapper = mapper;
     }
 
     [HttpGet("[action]/{pageSize}/{pageNo}", Name = "MovieList")]
@@ -26,13 +32,21 @@ public class MoviesController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> List(int pageSize, int pageNo)
     {
-        var data = await _context.Movies.Skip(pageNo * pageSize).Take(pageSize).ToArrayAsync();
-        return Ok(data);
+        var count = await _context.Movies.CountAsync();
+        var data = (await _context
+            .Movies
+            .Skip(pageNo * pageSize)
+            .Take(pageSize)
+            .ToArrayAsync())
+            .Select(_mapper.Map<Movie,MovieDTO>)
+            .ToList();
+
+        var result = new ResultPage<MovieDTO> { Data = data, Page = pageNo, PageSize = pageSize, TotalCount = count };
+        return Ok(result);
     }
 
     [HttpGet("{id}", Name = "Movie")]
     [Produces(MediaTypeNames.Application.Json, MediaTypeNames.Application.Xml)]
-    [AllowAnonymous]
     public async Task<IActionResult> One(int id)
     {
         var data = await _context.Movies.FindAsync(id);

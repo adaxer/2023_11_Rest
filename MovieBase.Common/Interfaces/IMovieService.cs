@@ -1,5 +1,11 @@
-﻿namespace MovieBase.Common.Interfaces;
+﻿
+namespace MovieBase.Common.Interfaces;
 public interface IMovieService
 {
-    Task<IEnumerable<Movie>> GetMoviePage(int pageSize, int pageNo);
+    Task AddMovie(Movie movie, CancellationToken token);
+    Task<Movie> GetMovie(int id);
+    Task<IEnumerable<MovieDTO>> GetMoviePage(int pageSize, int pageNo);
+    Task Login(string email, string password);
+    Task Register(string email, string password);
+    Task<Movie> UpdateMovie(Movie movie, CancellationToken token);
 }

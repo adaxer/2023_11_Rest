@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using MovieBase.Api.Services;
 using MovieBase.Data;
 using System;
 
@@ -30,6 +31,17 @@ public class Program
         builder.Services.AddIdentityApiEndpoints<IdentityUser>().AddEntityFrameworkStores<UsersContext>();
         builder.Services.AddAuthorization();
 
+        builder.Services.AddAutoMapper(options => options.AddProfile<MapperProfile>());
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("CorsPolicy", builder => builder
+                .WithOrigins("http://localhost:4200")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+        });
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -43,6 +55,7 @@ public class Program
 
         app.UseHttpsRedirection();
 
+        app.UseCors("CorsPolicy");
         app.UseAuthorization();
 
         app.MapControllers();

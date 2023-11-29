@@ -15,10 +15,9 @@ export class MovieService {
 
   getMovies(pageSize: number, page: number): Observable<ResultPage<Movie>> {
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${MovieService.token}`,
       'Content-Type': 'application/json'
     });
-    return this.client.get<ResultPage<Movie>>(`${this.baseUrl}/Movie/List/${pageSize}/${page}`, { headers });
+    return this.client.get<ResultPage<Movie>>(`${this.baseUrl}/Movies/List/${pageSize}/${page}`, { headers });
   }
 
   getMovie(id: number): Observable<Movie> {
@@ -26,7 +25,7 @@ export class MovieService {
       'Authorization': `Bearer ${MovieService.token}`,
       'Content-Type': 'application/json'
     });
-    return this.client.get<Movie>(`${this.baseUrl}/Movie/${id}`, { headers });
+    return this.client.get<Movie>(`${this.baseUrl}/Movies/${id}`, { headers });
   }
 
   register() {

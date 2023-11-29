@@ -33,8 +33,8 @@ public static class MauiProgram
         services.AddTransient<MainPage>();
         services.AddTransient<AboutViewModel>();
         services.AddTransient<AboutPage>();
-        services.AddTransient<DetailsViewModel>();
-        services.AddTransient<DetailsPage>();
+        services.AddTransient<ListViewModel>();
+        services.AddTransient<ListPage>();
 
         services.AddSingleton<IMovieService, MovieService>();
         services.AddSingleton<INavigationService, NavigationService>();

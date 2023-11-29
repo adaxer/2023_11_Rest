@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using MovieBase.ClientLib;
 using MovieBase.Common;
+using MovieBase.Common.Interfaces;
 using System.Net.Http.Json;
 
 namespace MovieBase.ConsoleClient;
 
 internal class Program
 {
+    static IMovieService service = new MovieService();
     static async Task Main(string[] args)
     {
         try
@@ -14,29 +16,31 @@ internal class Program
             Console.Write("Not found");
             var result = await new HttpClient().GetAsync("https://localhost:7267/something");
 
-            Console.WriteLine("Movieliste");
+            Console.WriteLine("\n\nMovieliste");
             //Console.ReadLine();
-            var service = new MovieService();
             var movies = await service.GetMoviePage(20, 0);
 
             foreach (var item in movies)
             {
-                Console.WriteLine(item.Title);
+                Console.WriteLine(item.Info);
             }
 
             Console.WriteLine("\n\nEinzelnes Movie");
-            //Console.ReadLine();
-            var movie = await service.GetMovie(33);
-            Console.WriteLine(movie.Title);
+            Console.ReadLine();
+            if (!await TryLoadMovie())
+            {
+                await RegisterAndLogin();
+                await TryLoadMovie();
+            }
 
             Console.WriteLine("\n\nAdd Movie");
             Console.ReadLine();
-            await service.AddMovie(new Movie { Title = "Stargate", Director="Whoever" }, CancellationToken.None);
+            await service.AddMovie(new Movie { Title = "Stargate", Director = "Whoever" }, CancellationToken.None);
 
             Console.WriteLine("\n\nPut");
             Console.ReadLine();
 
-            movie = await service.UpdateMovie(new Movie
+            var movie = await service.UpdateMovie(new Movie
             {
                 Id = 1,
                 Title = "Blade Runner 2048",
@@ -52,5 +56,26 @@ internal class Program
 
         Console.ReadLine();
 
+    }
+
+    private static async Task RegisterAndLogin()
+    {
+        await service.Register("test@test.de", "Pa$$w0rd");
+        await service.Login("test@test.de", "Pa$$w0rd");
+    }
+
+    private static async Task<bool> TryLoadMovie()
+    {
+        try
+        {
+            var movie = await service.GetMovie(33);
+            Console.WriteLine(movie.Title);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"{ex}");
+            return false;
+        }
     }
 }

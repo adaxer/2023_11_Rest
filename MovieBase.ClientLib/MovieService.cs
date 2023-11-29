@@ -1,12 +1,10 @@
 ﻿using MovieBase.Common;
 using MovieBase.Common.Interfaces;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System;
 using System.Diagnostics;
+using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
-using static System.Net.WebRequestMethods;
 
 namespace MovieBase.ClientLib;
 
@@ -14,17 +12,27 @@ public class MovieService : IMovieService
 {
     private string _baseUrl = "https://localhost:7267";
     private HttpClient _client = new HttpClient();
+    private string? _accessToken = "";
 
-    public async Task<IEnumerable<Movie>> GetMoviePage(int pageSize, int pageNo)
+    public async Task<IEnumerable<MovieDTO>> GetMoviePage(int pageSize, int pageNo)
     {
-        var movies = await _client.GetFromJsonAsync<IEnumerable<Movie>>($"{_baseUrl}/movies/list/{pageSize}/{pageNo}");
-        return movies!.ToList();
+        var page = await _client.GetFromJsonAsync<ResultPage<MovieDTO>>($"{_baseUrl}/movies/list/{pageSize}/{pageNo}");
+        return page!.Data!.ToList();
     }
 
     public async Task<Movie> GetMovie(int id)
     {
-        var movie = await _client.GetFromJsonAsync<Movie>($"{_baseUrl}/movies/{id}");
-        return movie!;
+        _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _accessToken);
+        try
+        {
+            var movie = await _client.GetFromJsonAsync<Movie>($"{_baseUrl}/movies/{id}");
+            return movie!;
+        }
+        catch (Exception ex)
+        {
+            Trace.TraceError($"{ex}");
+            throw;
+        }
     }
 
     public async Task AddMovie(Movie movie, CancellationToken token)
@@ -43,11 +51,36 @@ public class MovieService : IMovieService
     public async Task<Movie> UpdateMovie(Movie movie, CancellationToken token)
     {
         var result = await _client.PutAsJsonAsync<Movie>($"{_baseUrl}/movies", movie, token);
-        if(result.IsSuccessStatusCode)
+        if (result.IsSuccessStatusCode)
         {
             var json = await result.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<Movie>(json)!;
         }
         throw new HttpRequestException("Could not update");
     }
+
+    public async Task Register(string email, string password)
+    {
+        var userData = new { username = email, password = password, email=email };
+        var response = await _client.PostAsJsonAsync($"{_baseUrl}/register", userData);
+
+        Trace.WriteLine($"Register returned {response.StatusCode}");
+    }
+
+    public async Task Login(string email, string password)
+    {
+        var userData = new { username = email, password = password, email = email };
+        var response = await _client.PostAsJsonAsync($"{_baseUrl}/login", userData);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var tokenResponse = await response.Content.ReadFromJsonAsync<TokenResponse>();
+            _accessToken = tokenResponse?.AccessToken;
+        }
+    }
+}
+
+internal class TokenResponse
+{
+    public string? AccessToken { get; set; }
 }
