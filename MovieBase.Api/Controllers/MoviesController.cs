@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using System.Net.Mime;
 namespace MovieBase.Api.Controllers;
 [ApiController]
 [Route("[controller]")]
+[Authorize]
 public class MoviesController : ControllerBase
 {
     private readonly ILogger<MoviesController> _logger;
@@ -21,6 +23,7 @@ public class MoviesController : ControllerBase
 
     [HttpGet("[action]/{pageSize}/{pageNo}", Name = "MovieList")]
     [Produces(MediaTypeNames.Application.Json, MediaTypeNames.Application.Xml)]
+    [AllowAnonymous]
     public async Task<IActionResult> List(int pageSize, int pageNo)
     {
         var data = await _context.Movies.Skip(pageNo * pageSize).Take(pageSize).ToArrayAsync();
@@ -29,6 +32,7 @@ public class MoviesController : ControllerBase
 
     [HttpGet("{id}", Name = "Movie")]
     [Produces(MediaTypeNames.Application.Json, MediaTypeNames.Application.Xml)]
+    [AllowAnonymous]
     public async Task<IActionResult> One(int id)
     {
         var data = await _context.Movies.FindAsync(id);
@@ -55,7 +59,7 @@ public class MoviesController : ControllerBase
         {
             await _context.Movies.AddAsync(newMovie);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(One), new { id = newMovie.Id }, newMovie);
+            return CreatedAtAction("Movie", new { id = newMovie.Id }, newMovie);
         }
         catch (Exception ex)
         {

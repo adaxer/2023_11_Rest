@@ -1,6 +1,10 @@
 
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using MovieBase.Data;
+using System;
 
 namespace MovieBase.Api;
 
@@ -19,7 +23,12 @@ public class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+
         builder.Services.AddDbContext<MovieContext>(o=>o.UseInMemoryDatabase("app.db"));
+        builder.Services.AddDbContext<UsersContext>(o=>o.UseInMemoryDatabase("users.db"));
+
+        builder.Services.AddIdentityApiEndpoints<IdentityUser>().AddEntityFrameworkStores<UsersContext>();
+        builder.Services.AddAuthorization();
 
         var app = builder.Build();
 
@@ -37,7 +46,13 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
+        app.MapIdentityApi<IdentityUser>();
 
         app.Run();
+    }
+
+    public class UsersContext : IdentityDbContext<IdentityUser>
+    {
+        public UsersContext(DbContextOptions<UsersContext> options) : base(options) { }
     }
 }
