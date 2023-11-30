@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieBase.Common;
+using System.Reflection.Metadata;
 
 namespace MovieBase.Data;
 
@@ -7,13 +8,23 @@ public class MovieContext : DbContext
 {
     public DbSet<Movie> Movies { get; set; }
     public DbSet<Award> Awards { get; set; }
+    public DbSet<Merchandising> Merchandisings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Configuring many-to-many relationship
         modelBuilder.Entity<Movie>()
-            .HasMany(m => m.Awards)
-            .WithMany(a => a.Movies);
+            .HasMany(e => e.Merchandisings)
+            .WithOne(e => e.Movie)
+            .HasForeignKey(e => e.MovieId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired(false);
+
+        modelBuilder.Entity<Movie>()
+            .HasMany(e => e.Awards)
+            .WithMany(e => e.Movies)
+            .UsingEntity(
+                l => l.HasOne(typeof(Award)).WithMany().OnDelete(DeleteBehavior.Cascade),
+                r => r.HasOne(typeof(Movie)).WithMany().OnDelete(DeleteBehavior.Cascade));
     }
 
     public MovieContext(DbContextOptions<MovieContext> options) : base(options)
@@ -129,8 +140,14 @@ public class MovieContext : DbContext
                 new Movie { Id = 99, Title = "War of the Worlds", Director = "Steven Spielberg", Released = new DateOnly(2005, 6, 29) },
                 new Movie { Id = 100, Title = "Predestination", Director = "Michael Spierig & Peter Spierig", Released = new DateOnly(2014, 8, 28) },
            };
+            var awards = new List<Award> {
+                new Award { Id = 1, Name = "Oskar", Movies = new List<Movie> { movies.First(), movies.Skip(5).First() } },
+                new Award { Id = 2, Name = "Golden Globe", Movies = new List<Movie> { movies.Skip(1).First(), movies.Skip(5).First() } },
+                new Award { Id = 3, Name = "Bayer. Filmpreis", Movies = new List<Movie> { movies.First(), movies.Skip(6).First() } },
+            };
 
             Movies.AddRange(movies);
+            Awards.AddRange(awards);
             SaveChanges();
         }
     }

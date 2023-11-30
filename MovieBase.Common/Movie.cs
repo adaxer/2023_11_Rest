@@ -10,10 +10,11 @@ public class Movie
     public string Title { get; set; } = string.Empty;
 
     [Required]
-    public string Director { get; set; }= string.Empty;
+    public string Director { get; set; } = string.Empty;
 
     public DateOnly Released { get; set; }
 
-    public ICollection<Award> Awards { get; set; }
+    public ICollection<Award> Awards { get; } = new List<Award>();
+    public ICollection<Merchandising> Merchandisings { get; } = new List<Merchandising>();
 
 }

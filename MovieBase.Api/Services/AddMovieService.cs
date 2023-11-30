@@ -30,7 +30,7 @@ public class AddMovieService : IHostedService
         while (true)
         {
             await AddMovie();
-            await Task.Delay(3000);
+            await Task.Delay(20000);
         }
     }
 

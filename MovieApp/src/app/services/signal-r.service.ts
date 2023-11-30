@@ -19,7 +19,10 @@ export class SignalRService {
       .start()
       .then(() => {
         console.log('Connection started');
-        this.hubConnection?.on('message', s => this.moviesChanged.next());
+        this.hubConnection?.on('message', s => {
+          console.log("SignalR incoming: ", s);
+          this.moviesChanged.next();
+        });
       })
       .catch(err => console.log('Error while starting connection: ' + err))
   }
