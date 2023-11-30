@@ -13,4 +13,7 @@ public class Movie
     public string Director { get; set; }= string.Empty;
 
     public DateOnly Released { get; set; }
+
+    public ICollection<Award> Awards { get; set; }
+
 }
