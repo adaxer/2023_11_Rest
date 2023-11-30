@@ -9,6 +9,8 @@ namespace MovieBase.ConsoleClient;
 internal class Program
 {
     static IMovieService service = new MovieService();
+    static IMessageService signalR = new MessageService();
+
     static async Task Main(string[] args)
     {
         try
@@ -25,8 +27,16 @@ internal class Program
                 Console.WriteLine(item.Info);
             }
 
+            var signalRConnected = await signalR.Connect();
+            if(signalRConnected)
+            {
+                signalR.OnMessage += s =>
+                {
+                    Console.WriteLine(s);
+                };
+            }
+
             Console.WriteLine("\n\nEinzelnes Movie");
-            Console.ReadLine();
             if (!await TryLoadMovie())
             {
                 await RegisterAndLogin();
@@ -34,11 +44,9 @@ internal class Program
             }
 
             Console.WriteLine("\n\nAdd Movie");
-            Console.ReadLine();
             await service.AddMovie(new Movie { Title = "Stargate", Director = "Whoever" }, CancellationToken.None);
 
             Console.WriteLine("\n\nPut");
-            Console.ReadLine();
 
             var success = await service.UpdateMovie(new Movie
             {
@@ -54,8 +62,9 @@ internal class Program
             Console.WriteLine(ex.Message);
         }
 
+        await Task.Delay(10000);
         Console.ReadLine();
-
+        await signalR.Disconnect();
     }
 
     private static async Task RegisterAndLogin()

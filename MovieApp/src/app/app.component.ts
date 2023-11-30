@@ -18,6 +18,6 @@ export class AppComponent implements OnInit{
   menuTitle = "Sitemap";
 
   ngOnInit(): void {
-    //this.signalR.startConnection();
+    this.signalR.startConnection();
   }
 }

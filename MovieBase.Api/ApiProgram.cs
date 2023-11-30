@@ -42,6 +42,10 @@ public class Program
                 .AllowCredentials());
         });
 
+        builder.Services.AddHostedService<AddMovieService>();
+
+        builder.Services.AddSignalR(o => o.KeepAliveInterval = TimeSpan.FromSeconds(15));
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -59,6 +63,8 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
+        app.MapHub<MessageHub>("/messages");
+
         app.MapIdentityApi<IdentityUser>();
 
         app.Run();
