@@ -28,7 +28,7 @@ internal class Program
             }
 
             var signalRConnected = await signalR.Connect();
-            if(signalRConnected)
+            if (signalRConnected)
             {
                 signalR.OnMessage += s =>
                 {
@@ -62,7 +62,19 @@ internal class Program
             Console.WriteLine(ex.Message);
         }
 
-        await Task.Delay(10000);
+        // Typisch Demo-Dämon. Nach einfügen dieses Codes unten gehts auf einmal,
+        // obwohl ich den Methodennamen im MessageService nicht geändert habe...
+        Console.WriteLine("You can now send messages or hit return to exit");
+        string? message;
+        do
+        {
+            if ((message = Console.ReadLine()) != null)
+            {
+                await signalR.SendMessage(message);
+            }
+
+        } while (message != null);
+
         Console.ReadLine();
         await signalR.Disconnect();
     }

@@ -25,7 +25,6 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        var connstring = builder.Configuration.GetConnectionString("Movies");
         builder.Services.AddDbContext<MovieContext>(o => o
             .UseSqlite("Data Source=./movies.db")
             .EnableSensitiveDataLogging()

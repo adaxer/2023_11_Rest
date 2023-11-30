@@ -19,7 +19,7 @@ public class MessageService : IMessageService
                 .WithAutomaticReconnect()
                 .Build();
 
-            _connection.On<string>("Message", s =>
+            _connection.On<string>("message", s =>
             {
                 OnMessage?.Invoke(s);
             });
@@ -35,4 +35,18 @@ public class MessageService : IMessageService
     }
 
     public Task Disconnect() => _connection!.StopAsync();
+
+    public async Task<bool> SendMessage(string message)
+    {
+        try
+        {
+            await _connection!.SendAsync("clientMessage", $"From message service: {message}");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Trace.TraceError($"{ex}");
+            return false;
+        }
+    }
 }
