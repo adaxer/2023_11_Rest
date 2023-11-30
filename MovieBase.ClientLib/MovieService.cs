@@ -48,15 +48,10 @@ public class MovieService : IMovieService
         Trace.WriteLine($"Body: {body}");
     }
 
-    public async Task<Movie> UpdateMovie(Movie movie, CancellationToken token)
+    public async Task<bool> UpdateMovie(Movie movie, CancellationToken token)
     {
         var result = await _client.PutAsJsonAsync<Movie>($"{_baseUrl}/movies", movie, token);
-        if (result.IsSuccessStatusCode)
-        {
-            var json = await result.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<Movie>(json)!;
-        }
-        throw new HttpRequestException("Could not update");
+        return (result.IsSuccessStatusCode);
     }
 
     public async Task Register(string email, string password)

@@ -7,5 +7,5 @@ public interface IMovieService
     Task<IEnumerable<MovieDTO>> GetMoviePage(int pageSize, int pageNo);
     Task Login(string email, string password);
     Task Register(string email, string password);
-    Task<Movie> UpdateMovie(Movie movie, CancellationToken token);
+    Task<bool> UpdateMovie(Movie movie, CancellationToken token);
 }

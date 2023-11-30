@@ -14,10 +14,10 @@ internal class Program
         try
         {
             Console.Write("Not found");
+            Console.ReadLine();
             var result = await new HttpClient().GetAsync("https://localhost:7267/something");
 
             Console.WriteLine("\n\nMovieliste");
-            //Console.ReadLine();
             var movies = await service.GetMoviePage(20, 0);
 
             foreach (var item in movies)
@@ -40,14 +40,14 @@ internal class Program
             Console.WriteLine("\n\nPut");
             Console.ReadLine();
 
-            var movie = await service.UpdateMovie(new Movie
+            var success = await service.UpdateMovie(new Movie
             {
                 Id = 1,
                 Title = "Blade Runner 2048",
                 Director = "Ridley",
                 Released = DateOnly.FromDateTime(DateTime.Now.AddYears(-5))
             }, CancellationToken.None);
-            Console.WriteLine($"{movie.Title}, {movie.Director}, {movie.Released}");
+            Console.WriteLine($"Success? {success}");
         }
         catch (Exception ex)
         {
